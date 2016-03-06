@@ -19,16 +19,49 @@
 # “поиска с восхождением к вершине”, в котором результат сохраняется только в том случае, если он лучше предыдущего.
 
 import string
+import random
+import collections
 
-sAlphabet = string.ascii_lowercase + ' '
-sAim = 'methinks it is like a weasel'
-
-
-def gena():
-    sgenstring = set()
-
-    for x in range(0, len(sAim)):
-        #TODO: использовать генератор случайных чисел для выбора случайной буквы
-        sgenstring.add(sAlphabet[x])
+ALPHABET = string.ascii_lowercase + ' '
+AIM = 'methinks it is like a weasel'
 
 
+def chargen():
+    genstring = ''
+
+    for x in range(len(AIM)):
+        r = random.randrange(len(ALPHABET))
+        genstring += ALPHABET[r]
+
+    return genstring
+
+
+def quality(a):
+    correct = 0
+    for x in range(len(AIM)):
+        if a[x] == AIM[x]:
+            correct += 1
+    return correct
+
+
+def run():
+    count = 0
+    done = False
+
+    while not done:
+        dic = dict()
+        result = chargen()
+        length = quality(result)
+        dic[result] = length
+        if length == len(AIM):
+            print('%s : DONE' % result)
+            done = True
+        elif count == 1000:
+            dic = collections.Counter(dic)
+            dic = dic.most_common(1)
+            print('%s : %d' % dic[0])
+            count = 0
+        else:
+            count += 1
+
+run()
